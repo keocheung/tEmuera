@@ -14,20 +14,44 @@
 
 ### 推荐运行方式
 
-使用 `.NET 8 SDK` 或 `.NET 6 SDK` 创建独立 console 项目，不使用 Unity 运行验证：
+使用 .NET SDK 创建独立 console 项目，不使用 Unity 运行验证：
 
 ```bash
 dotnet new console -n UEmuera.Headless
 dotnet run --project UEmuera.Headless -- /path/to/era-game
 ```
 
-当前仓库已包含初版 `UEmuera.Headless/`。可直接运行：
+当前仓库已包含 `UEmuera.Headless/`，项目目标框架为 `net9.0`。可直接运行：
 
 ```bash
 dotnet run --project UEmuera.Headless -- "games/era紅魔館protoNTR0036甜艮菜魔改版整合升级V2.08 (36旧版-附Debug)"
 ```
 
 默认会隐藏加载期脚本警告以便终端游玩；需要排查脚本加载问题时加 `--show-warnings`。运行中输入菜单编号或文本，空行用于 Enter/AnyKey，`:help` 显示 headless 命令，`:quit` 退出。
+
+### 当前 C# Headless 状态
+
+`UEmuera.Headless/` 目前已经可以作为 uEmuera 核心逻辑的终端验证器使用。它复用 `uEmuera/Assets/Scripts/Emuera` 与必要的 `uEmuera/Assets/Scripts/uEmuera` 代码，替换 Unity 窗口、图形、资源和平台层。
+
+已完成能力：
+
+1. 从游戏目录加载 `ERB/CSV/DAT/CONFIG/SAV` 等资源，执行脚本主流程
+2. 支持纯文本输出、按钮文本捕获、数字/字符串输入、Enter/AnyKey
+3. 支持 `:choices` 查看当前捕获到的输入选项，默认不重复打印一套选择列表
+4. 支持读取已有 `sav/` 存档目录，并将存档目录固定到游戏目录下
+5. 在 macOS/Unix 上创建临时大小写兼容 overlay，为资源目录和文件建立大小写别名
+6. 默认隐藏加载期 warning，`--show-warnings` 可恢复显示
+7. 使用现代终端 ANSI truecolor 渲染 uEmuera 文本颜色、背景色和 bold/italic/underline/strikeout 样式
+8. 使用 Emuera 字符宽度规则补偿终端宽度差异，改善 `■`、`┃`、`＜＞` 等地图字符的对齐
+9. 对 `ClearDisplay` 做终端清屏并从当前显示列表重绘；对 temporary line 做上移清行替换，减少 loading 行堆积
+
+目前的终端行为仍不是完整 GUI 等价：
+
+1. 没有鼠标 hover/点击，因此按钮 `FocusColor/ButtonColor` 只保留接口路径，默认按未选中状态渲染
+2. 图像、CBG/GXX、调试窗口、配置窗口等 GUI 功能仍为 stub 或 no-op
+3. HTML/富文本显示只覆盖文本颜色和基础字体样式，未完整模拟 uEmuera 的全部绘制细节
+4. 终端字符宽度依赖具体终端字体和 East Asian Width 策略，地图类输出仍可能需要针对终端环境微调
+5. `Properties.Resources` 目前由 `HeadlessStubs.cs` 提供必要字符串 stub，尚未完整接入原始资源管理器
 
 console 项目中纳入编译的参考代码：
 
