@@ -1,0 +1,3 @@
+[submodule "uEmuera"]
+	path = uEmuera
+	url = https://github.com/keocheung/uEmuera

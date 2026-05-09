@@ -1,6 +1,8 @@
 games/
-uEmuera/
+
 bin/
 obj/
 UEmuera.Headless/bin/
 UEmuera.Headless/obj/
+
+target/
