@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <StartupObject>UEmuera.Headless.HeadlessEntry</StartupObject>
+    <DefineConstants>$(DefineConstants);HEADLESS</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="../uEmuera/Assets/Scripts/Emuera/**/*.cs" />
+    <Compile Include="../uEmuera/Assets/Scripts/uEmuera/Forms.cs" />
+    <Compile Include="../uEmuera/Assets/Scripts/uEmuera/Utils.cs" />
+    <Compile Include="../uEmuera/Assets/Scripts/uEmuera/Drawing.cs" />
+    <Compile Include="../uEmuera/Assets/Scripts/uEmuera/Media.cs" />
+    <Compile Include="../uEmuera/Assets/Scripts/uEmuera/VisualBasic.cs" />
+    <Compile Include="../uEmuera/Assets/Scripts/uEmuera/partial/**/*.cs" />
+  </ItemGroup>
+</Project>

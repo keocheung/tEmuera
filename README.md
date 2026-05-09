@@ -21,6 +21,14 @@ dotnet new console -n UEmuera.Headless
 dotnet run --project UEmuera.Headless -- /path/to/era-game
 ```
 
+当前仓库已包含初版 `UEmuera.Headless/`。可直接运行：
+
+```bash
+dotnet run --project UEmuera.Headless -- "games/era紅魔館protoNTR0036甜艮菜魔改版整合升级V2.08 (36旧版-附Debug)"
+```
+
+默认会隐藏加载期脚本警告以便终端游玩；需要排查脚本加载问题时加 `--show-warnings`。运行中输入菜单编号或文本，空行用于 Enter/AnyKey，`:help` 显示 headless 命令，`:quit` 退出。
+
 console 项目中纳入编译的参考代码：
 
 ```text
