@@ -35,7 +35,8 @@ namespace UEmuera.Headless
             uEmuera.Logger.warn = value => Console.Error.WriteLine(value);
             uEmuera.Logger.error = value => Console.Error.WriteLine(value);
 
-            Program.Main(Array.Empty<string>());
+            using (TerminalScreen.Enter())
+                Program.Main(Array.Empty<string>());
         }
 
         private static string ParseArgs(string[] args)

@@ -48,6 +48,7 @@ namespace uEmuera.Window
         private int temporaryLinesOnScreen;
         private int lastBackColorArgb;
         private bool terminalColorsApplied;
+        private bool terminalBackgroundFilled;
         private readonly List<TerminalButton> currentButtons = new List<TerminalButton>();
 
         public void Dispose()
@@ -72,7 +73,13 @@ namespace uEmuera.Window
             if (console == null)
                 return;
 
-            ApplyTerminalColors(false);
+            if (ApplyTerminalColors(false) || !terminalBackgroundFilled)
+            {
+                ClearTerminal();
+                printedLineCount = 0;
+                currentButtons.Clear();
+                capturedButtonGeneration = -1;
+            }
 
             var displayLineCount = console.GetDisplayLinesCount();
             if (displayLineCount < printedLineCount || displayLineCount < lastDisplayLineCount)
@@ -122,7 +129,7 @@ namespace uEmuera.Window
             }
             if (input == ":help")
             {
-                Console.Error.WriteLine("[headless] 输入菜单编号或文本；空行用于 Enter/AnyKey；:choices 显示当前选项；:quit 退出；--show-warnings 显示加载警告。");
+                WriteStatusLine("[headless] 输入菜单编号或文本；空行用于 Enter/AnyKey；:choices 显示当前选项；:quit 退出；--show-warnings 显示加载警告。");
                 return;
             }
             if (input == ":choices")
@@ -144,11 +151,12 @@ namespace uEmuera.Window
 
             if (hiddenWarningCount > 0)
             {
-                Console.Error.WriteLine("[headless] hidden parser warnings: " + hiddenWarningCount + " (run with --show-warnings to display them)");
+                WriteStatusLine("[headless] hidden parser warnings: " + hiddenWarningCount + " (run with --show-warnings to display them)");
                 hiddenWarningCount = 0;
             }
 
-            Console.Error.Write(console.IsWaitingEnterKey ? "[enter] " : "[input] ");
+            ApplyTerminalColors(true);
+            Console.Write(console.IsWaitingEnterKey ? "[enter] " : "[input] ");
             promptShown = true;
         }
 
@@ -183,7 +191,7 @@ namespace uEmuera.Window
 
         internal void ShowConfigDialog()
         {
-            Console.Error.WriteLine("[headless] config dialog is not available");
+            WriteStatusLine("[headless] config dialog is not available");
         }
 
         public string InternalEmueraVer { get { return uEmueraVer; } }
@@ -208,7 +216,8 @@ namespace uEmuera.Window
             if (temporaryLinesOnScreen > 0)
                 ClearTemporaryLines();
 
-            Console.WriteLine(RenderLine(line));
+            Console.Write(RenderLine(line));
+            Console.Write("\r\n");
             if (line.IsTemporary)
                 temporaryLinesOnScreen = 1;
         }
@@ -237,12 +246,14 @@ namespace uEmuera.Window
         {
             var builder = new StringBuilder();
             var cursorColumn = 0;
+            AppendTerminalBaseStyle(builder, console != null ? console.bgColor : Config.BackColor);
             var buttons = line.Buttons;
             for (var i = 0; i < buttons.Length; i++)
             {
                 var button = buttons[i];
                 AppendButton(builder, button, ref cursorColumn);
             }
+            AppendSpaces(builder, Math.Max(0, GetTerminalColumnCount() - cursorColumn));
             return builder.ToString();
         }
 
@@ -268,7 +279,8 @@ namespace uEmuera.Window
         private void ClearTerminal()
         {
             ApplyTerminalColors(true);
-            Console.Write("\x1b[2J\x1b[H");
+            FillTerminalBackground();
+            terminalBackgroundFilled = true;
             temporaryLinesOnScreen = 0;
         }
 
@@ -276,20 +288,52 @@ namespace uEmuera.Window
         {
             while (temporaryLinesOnScreen > 0)
             {
-                Console.Write("\x1b[1A\r\x1b[2K");
+                Console.Write("\x1b[1A\r");
+                WriteBlankTerminalLine();
+                Console.Write("\r");
                 temporaryLinesOnScreen--;
             }
         }
 
-        private void ApplyTerminalColors(bool force)
+        private bool ApplyTerminalColors(bool force)
         {
             var backArgb = console != null ? console.bgColor.ToArgb() : Config.BackColor.ToArgb();
+            var backgroundChanged = terminalColorsApplied && backArgb != lastBackColorArgb;
             if (!force && terminalColorsApplied && backArgb == lastBackColorArgb)
-                return;
+                return false;
 
             lastBackColorArgb = backArgb;
             terminalColorsApplied = true;
             AppendTerminalBaseStyle(Console.Out, console != null ? console.bgColor : Config.BackColor);
+            AppendTerminalBaseStyle(Console.Error, console != null ? console.bgColor : Config.BackColor);
+            return backgroundChanged;
+        }
+
+        private void WriteStatusLine(string text)
+        {
+            ApplyTerminalColors(true);
+            var builder = new StringBuilder();
+            AppendTerminalBaseStyle(builder, console != null ? console.bgColor : Config.BackColor);
+            builder.Append(text);
+            AppendSpaces(builder, Math.Max(0, GetTerminalColumnCount() - GetTerminalWidth(text)));
+            Console.Write(builder.ToString());
+            Console.Write("\r\n");
+        }
+
+        private void FillTerminalBackground()
+        {
+            var rows = GetTerminalRowCount();
+            for (var row = 1; row <= rows; row++)
+            {
+                Console.Write("\x1b[" + row + ";1H");
+                WriteBlankTerminalLine();
+            }
+            Console.Write("\x1b[H");
+        }
+
+        private static void WriteBlankTerminalLine()
+        {
+            Console.Write(new string(' ', GetTerminalColumnCount()));
         }
 
         private static void ResetTerminalStyle()
@@ -369,6 +413,30 @@ namespace uEmuera.Window
         {
             for (var i = 0; i < count; i++)
                 builder.Append(' ');
+        }
+
+        private static int GetTerminalColumnCount()
+        {
+            try
+            {
+                return Math.Max(1, Console.WindowWidth);
+            }
+            catch
+            {
+                return 80;
+            }
+        }
+
+        private static int GetTerminalRowCount()
+        {
+            try
+            {
+                return Math.Max(1, Console.WindowHeight);
+            }
+            catch
+            {
+                return 24;
+            }
         }
 
         private static int GetTerminalWidth(string text)
@@ -498,13 +566,13 @@ namespace uEmuera.Window
         {
             if (currentButtons.Count == 0)
             {
-                Console.Error.WriteLine("[choices] no choices captured");
+                WriteStatusLine("[choices] no choices captured");
                 return;
             }
 
-            Console.Error.WriteLine("[choices]");
+            WriteStatusLine("[choices]");
             for (var i = 0; i < currentButtons.Count; i++)
-                Console.Error.WriteLine("  " + currentButtons[i].Input + "  " + currentButtons[i].Text);
+                WriteStatusLine("  " + currentButtons[i].Input + "  " + currentButtons[i].Text);
         }
 
         private sealed class TerminalButton
