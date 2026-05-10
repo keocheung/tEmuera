@@ -21,7 +21,7 @@ dotnet new console -n UEmuera.Headless
 dotnet run --project UEmuera.Headless -- /path/to/era-game
 ```
 
-当前仓库已包含 `UEmuera.Headless/`，项目目标框架为 `net9.0`。可直接运行：
+当前仓库已包含 `UEmuera.Headless/`，项目目标框架为 `net10.0`。可直接运行：
 
 ```bash
 dotnet run --project UEmuera.Headless -- "games/era紅魔館protoNTR0036甜艮菜魔改版整合升级V2.08 (36旧版-附Debug)"
