@@ -27,6 +27,21 @@ dotnet run --project UEmuera.Headless -- /path/to/era-game
 dotnet run --project UEmuera.Headless -- "games/era紅魔館protoNTR0036甜艮菜魔改版整合升级V2.08 (36旧版-附Debug)"
 ```
 
+也可以打包成本地 .NET tool：
+
+```bash
+dotnet pack UEmuera.Headless
+dotnet tool install --global --add-source artifacts/packages UEmuera.Headless
+uemuera-headless "/path/to/era-game"
+```
+
+如果在 macOS/Homebrew 安装的 .NET 下运行 tool 时提示 `You must install .NET to run this application`，通常是 .NET apphost 没找到 Homebrew 的 runtime 路径。可在 shell 配置中加入：
+
+```bash
+export DOTNET_ROOT=/opt/homebrew/opt/dotnet/libexec
+export DOTNET_ROOT_ARM64=/opt/homebrew/opt/dotnet/libexec
+```
+
 默认会隐藏加载期脚本警告以便终端游玩；需要排查脚本加载问题时加 `--show-warnings`。运行中输入菜单编号或文本，空行用于 Enter/AnyKey，`:help` 显示 headless 命令，`:quit` 退出。
 
 ### 当前 C# Headless 状态

@@ -20,7 +20,7 @@ namespace UEmuera.Headless
             var gamePath = ParseArgs(args);
             if (gamePath == null || !Directory.Exists(gamePath))
             {
-                Console.Error.WriteLine("Usage: dotnet run --project UEmuera.Headless -- [--show-warnings] /path/to/era-game");
+                Console.Error.WriteLine("Usage: uemuera-headless [--show-warnings] /path/to/era-game");
                 Environment.ExitCode = 2;
                 return;
             }

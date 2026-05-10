@@ -7,6 +7,14 @@
     <StartupObject>UEmuera.Headless.HeadlessEntry</StartupObject>
     <DefineConstants>$(DefineConstants);HEADLESS</DefineConstants>
     <NoWarn>$(NoWarn);CS0169;CS0414;CS0649</NoWarn>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>uemuera-headless</ToolCommandName>
+    <PackageId>UEmuera.Headless</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>tEmuera contributors</Authors>
+    <Description>Headless terminal runner for uEmuera/Emuera games.</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageOutputPath>../artifacts/packages</PackageOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,5 +25,9 @@
     <Compile Include="../uEmuera/Assets/Scripts/uEmuera/Media.cs" />
     <Compile Include="../uEmuera/Assets/Scripts/uEmuera/VisualBasic.cs" />
     <Compile Include="../uEmuera/Assets/Scripts/uEmuera/partial/**/*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="../README.md" Pack="true" PackagePath="/" />
   </ItemGroup>
 </Project>

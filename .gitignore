@@ -4,5 +4,6 @@ bin/
 obj/
 UEmuera.Headless/bin/
 UEmuera.Headless/obj/
+artifacts/
 
 target/
