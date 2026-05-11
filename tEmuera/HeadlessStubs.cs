@@ -15,19 +15,19 @@ public static class GenericUtils
     {
         var md5s = new List<string>();
         var start = 0;
-        var count = 0;
 
         while (start < data.Length && data[start] != 0)
         {
-            while (start + count < data.Length && data[start + count] != ':')
-                count += 1;
-            md5s.Add(CalcMd5(data, start, count));
+            var lineEnd = start;
+            while (lineEnd < data.Length && data[lineEnd] != '\r' && data[lineEnd] != '\n' && data[lineEnd] != 0)
+                lineEnd += 1;
 
-            start += count;
-            count = 0;
+            var colon = start;
+            while (colon < lineEnd && data[colon] != ':')
+                colon += 1;
+            md5s.Add(CalcMd5(data, start, colon - start));
 
-            while (start < data.Length && data[start] != '\r' && data[start] != '\n')
-                start += 1;
+            start = lineEnd;
             while (start < data.Length && (data[start] == '\r' || data[start] == '\n'))
                 start += 1;
         }
