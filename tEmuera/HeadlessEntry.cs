@@ -6,7 +6,7 @@ using System.Text;
 using MinorShift._Library;
 using MinorShift.Emuera;
 
-namespace UEmuera.Headless
+namespace tEmuera
 {
     public static class HeadlessOptions
     {
@@ -20,7 +20,7 @@ namespace UEmuera.Headless
             var gamePath = ParseArgs(args);
             if (gamePath == null || !Directory.Exists(gamePath))
             {
-                Console.Error.WriteLine("Usage: uemuera-headless [--show-warnings] /path/to/era-game");
+                Console.Error.WriteLine("Usage: temuera [--show-warnings] /path/to/era-game");
                 Environment.ExitCode = 2;
                 return;
             }
@@ -67,7 +67,7 @@ namespace UEmuera.Headless
 
         private static string PrepareCaseInsensitiveOverlay(string sourceRoot)
         {
-            var overlayRoot = Path.Combine(Path.GetTempPath(), "UEmuera.Headless", HashPath(sourceRoot));
+            var overlayRoot = Path.Combine(Path.GetTempPath(), "tEmuera", HashPath(sourceRoot));
             if (Directory.Exists(overlayRoot))
                 Directory.Delete(overlayRoot, true);
             Directory.CreateDirectory(overlayRoot);

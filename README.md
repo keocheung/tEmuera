@@ -17,22 +17,22 @@
 使用 .NET SDK 创建独立 console 项目，不使用 Unity 运行验证：
 
 ```bash
-dotnet new console -n UEmuera.Headless
-dotnet run --project UEmuera.Headless -- /path/to/era-game
+dotnet new console -n tEmuera
+dotnet run --project tEmuera -- /path/to/era-game
 ```
 
-当前仓库已包含 `UEmuera.Headless/`，项目目标框架为 `net10.0`。可直接运行：
+当前仓库已包含 `tEmuera/`，项目目标框架为 `net10.0`。可直接运行：
 
 ```bash
-dotnet run --project UEmuera.Headless -- "games/era紅魔館protoNTR0036甜艮菜魔改版整合升级V2.08 (36旧版-附Debug)"
+dotnet run --project tEmuera -- "games/era紅魔館protoNTR0036甜艮菜魔改版整合升级V2.08 (36旧版-附Debug)"
 ```
 
 也可以打包成本地 .NET tool：
 
 ```bash
-dotnet pack UEmuera.Headless
-dotnet tool install --global --add-source artifacts/packages UEmuera.Headless
-uemuera-headless "/path/to/era-game"
+dotnet pack tEmuera
+dotnet tool install --global --add-source artifacts/packages tEmuera
+temuera "/path/to/era-game"
 ```
 
 如果在 macOS/Homebrew 安装的 .NET 下运行 tool 时提示 `You must install .NET to run this application`，通常是 .NET apphost 没找到 Homebrew 的 runtime 路径。可在 shell 配置中加入：
@@ -46,7 +46,7 @@ export DOTNET_ROOT_ARM64=/opt/homebrew/opt/dotnet/libexec
 
 ### 当前 C# Headless 状态
 
-`UEmuera.Headless/` 目前已经可以作为 uEmuera 核心逻辑的终端验证器使用。它复用 `uEmuera/Assets/Scripts/Emuera` 与必要的 `uEmuera/Assets/Scripts/uEmuera` 代码，替换 Unity 窗口、图形、资源和平台层。
+`tEmuera/` 目前已经可以作为 uEmuera 核心逻辑的终端验证器使用。它复用 `uEmuera/Assets/Scripts/Emuera` 与必要的 `uEmuera/Assets/Scripts/uEmuera` 代码，替换 Unity 窗口、图形、资源和平台层。
 
 已完成能力：
 

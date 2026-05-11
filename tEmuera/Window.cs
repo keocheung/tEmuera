@@ -224,7 +224,7 @@ namespace uEmuera.Window
 
         private bool ShouldHideWarning(string text)
         {
-            if (UEmuera.Headless.HeadlessOptions.ShowWarnings)
+            if (tEmuera.HeadlessOptions.ShowWarnings)
                 return false;
 
             if (skipWarningSourceLine)

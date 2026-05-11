@@ -1,6 +1,6 @@
 using System;
 
-namespace UEmuera.Headless
+namespace tEmuera
 {
     internal sealed class TerminalScreen : IDisposable
     {
