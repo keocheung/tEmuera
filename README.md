@@ -1,6 +1,6 @@
 # tEmuera
 
-tEmuera 是一个基于 uEmuera/Emuera 代码的跨平台终端运行器，用来在不启动 Unity 图形界面的情况下运行 era 系列文字游戏。项目目标是复用现有 C# 核心逻辑，提供一个更轻量、便于调试和自动化验证的 headless/terminal 入口。
+tEmuera 是一个在终端运行的，基于 [uEmuera](https://github.com/xerysherry/uEmuera) 代码的跨平台 Era 模拟器。
 
 ```text
 tEmuera/HeadlessEntry.cs        命令行入口、游戏目录初始化
