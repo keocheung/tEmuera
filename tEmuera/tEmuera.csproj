@@ -13,6 +13,7 @@
     <Version>0.1.0</Version>
     <Authors>tEmuera contributors</Authors>
     <Description>Headless terminal runner for uEmuera/Emuera games.</Description>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageOutputPath>../artifacts/packages</PackageOutputPath>
   </PropertyGroup>
